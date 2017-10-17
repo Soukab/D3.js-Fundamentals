@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Drawing Shapes w/ D3 -"/>
+  <title>Drawing SVG Shapes with D3</title>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+  <h3>D3 Chart</h3>
+  <script>
+      var w=400;
+      var h=100;
+      function buildLine(ds){
+        var lineFun=d3.svg.line()
+                      .x(function(ds){return (ds.month-20130001)/3.25;})
+                      .y(function(ds){return h-ds.sales;})
+                      .interpolate("linear");
+
+        var svg=d3.select("body").append("svg")
+                 .attr({width:w,height:h});
+
+        var viz=svg.append("path")
+                   .attr({
+                       d:lineFun(ds.monthlySales),
+                       "stroke":"purple",
+                       "stroke-width":2,
+                       "fill":"none"
+                         });
+      }
+      function showHeader(ds){
+          d3.select("body").append("h1")
+                .text(ds.category+" Sales (2017)");
+      }
+      d3.json("../Data/MonthlySalesbyCategoryMultiple.json",function(error,data){
+         if(error){
+           console.log(error);
+         }else {
+           console.log(data);
+         }
+         data.contents.forEach(function(ds){
+           showHeader(ds);
+           buildLine(ds);
+           })
+        });
+  </script>
+</body>
+</html>
